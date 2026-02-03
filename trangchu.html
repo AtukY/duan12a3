@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bóc Lì Xì 12A3</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <main class="app">
+
+    <header class="header">
+      <h1>BÓC LÌ XÌ 12A3</h1>
+      <p class="subtitle">Mỗi STT chỉ được bóc 1 lần</p>
+    </header>
+
+    <!-- FORM -->
+    <section class="card">
+      <form id="userForm">
+        <div class="field">
+          <label>STT</label>
+          <input id="stt" type="number" min="1" max="42" placeholder="1 - 42" required />
+        </div>
+
+        <div class="field">
+          <label>Nickname</label>
+          <input id="nickname" type="text" maxlength="20" placeholder="Tên bạn" required />
+        </div>
+
+        <button type="submit" id="submitBtn">Xác nhận</button>
+      </form>
+    </section>
+
+    <!-- LÌ XÌ -->
+    <section class="card">
+      <div id="lixiBox" class="lixi-grid locked"></div>
+    </section>
+
+  </main>
+
+  <audio id="openSound" src="sounds/tntnay4.mp3" preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
