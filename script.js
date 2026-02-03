@@ -1,92 +1,72 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxTNdjRZLrJpJHJ2ocJz5Ym1dS89M9tZCpG5YuvUGwz9wSoPcKYzLlCVNu-jrFS_kqGxw/exec";
-
-const form = document.getElementById("userForm");
-const lixiBox = document.getElementById("lixiBox");
+const sttInput = document.getElementById("sttInput");
+const nameInput = document.getElementById("nameInput");
 const submitBtn = document.getElementById("submitBtn");
-const sound = document.getElementById("openSound");
 
-let user = null;
-let drawing = false;
+const lixiCard = document.getElementById("lixiCard");
+const lixiGrid = document.getElementById("lixiGrid");
+const lockOverlay = document.getElementById("lockOverlay");
 
-/* INIT */
-renderLixi();
-lockLixi(true);
+const modal = document.getElementById("resultModal");
+const resultText = document.getElementById("resultText");
+const closeModal = document.getElementById("closeModal");
 
-/* FORM SUBMIT */
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  if (drawing) return;
+const tntSound = document.getElementById("tntSound");
 
-  const stt = form.stt.value.trim();
-  const nickname = form.nickname.value.trim();
+let isUnlocked = false;
+let hasPicked = false;
 
-  if (!stt || !nickname) {
-    alert("Nhập thiếu thông tin");
+/* ===== render 9 lì xì ===== */
+for (let i = 0; i < 9; i++) {
+  const div = document.createElement("div");
+  div.className = "lixi";
+  div.innerHTML = `<img src="images/lixi.png" alt="lixi">`;
+  div.addEventListener("click", () => pickLixi(i));
+  lixiGrid.appendChild(div);
+}
+
+/* ===== submit form ===== */
+submitBtn.onclick = () => {
+  const stt = sttInput.value.trim();
+  const name = nameInput.value.trim();
+
+  if (!stt || !name) {
+    alert("Nhập đầy đủ STT và Nickname");
     return;
   }
 
-  submitBtn.disabled = true;
+  isUnlocked = true;
+  hasPicked = false;
 
-  try {
-    const res = await fetch(
-      `${GAS_URL}?action=status&stt=${stt}&nickname=${encodeURIComponent(nickname)}`
-    ).then(r => r.json());
+  lixiCard.classList.remove("locked");
+  lockOverlay.style.display = "none";
+};
 
-    if (!res.allowed) {
-      alert("STT đã bóc hoặc không hợp lệ");
-      submitBtn.disabled = false;
-      return;
-    }
+/* ===== pick lixi ===== */
+function pickLixi(index) {
+  if (!isUnlocked || hasPicked) return;
 
-    user = { stt, nickname };
-    lockLixi(false);
+  hasPicked = true;
+  tntSound.currentTime = 0;
+  tntSound.play();
 
-  } catch (err) {
-    alert("Không kết nối được server");
-    submitBtn.disabled = false;
-  }
-});
+  // giả lập kết quả
+  const money = Math.floor(Math.random() * 90 + 10) * 1000;
 
-/* DRAW */
-async function drawLixi() {
-  if (!user || drawing) return;
-
-  drawing = true;
-  lockLixi(true);
-
-  sound.currentTime = 0;
-  sound.play();
-
-  setTimeout(async () => {
-    try {
-      const res = await fetch(
-        `${GAS_URL}?action=draw&stt=${user.stt}&nickname=${encodeURIComponent(user.nickname)}`
-      ).then(r => r.json());
-
-      if (res.success) {
-        alert(`🎉 ${user.nickname} nhận: ${res.reward}`);
-      } else {
-        alert("Rút thưởng thất bại");
-      }
-
-    } catch {
-      alert("Lỗi kết nối khi rút thưởng");
-    }
-  }, 2000);
+  setTimeout(() => {
+    resultText.textContent = `Bạn nhận được ${money.toLocaleString()} VNĐ`;
+    modal.classList.remove("hidden");
+  }, 6000);
 }
 
-/* UI */
-function renderLixi() {
-  lixiBox.innerHTML = "";
-  for (let i = 0; i < 9; i++) {
-    const div = document.createElement("div");
-    div.className = "lixi";
-    div.innerHTML = `<img src="lixi.png" />`;
-    div.addEventListener("click", drawLixi);
-    lixiBox.appendChild(div);
-  }
-}
+/* ===== close modal & reset ===== */
+closeModal.onclick = () => {
+  modal.classList.add("hidden");
 
-function lockLixi(state) {
-  lixiBox.classList.toggle("locked", state);
-}
+  // reset cho người tiếp theo
+  sttInput.value = "";
+  nameInput.value = "";
+  isUnlocked = false;
+
+  lixiCard.classList.add("locked");
+  lockOverlay.style.display = "flex";
+};
