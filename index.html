@@ -2,45 +2,59 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
+  <title>Bốc Lì Xì Tết</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bóc Lì Xì 12A3</title>
 
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="bg-pattern"></div>
 
-  <main class="app">
+  <!-- BANNER -->
+  <div class="banner">
+    <h1>🎊 BỐC LÌ XÌ MAY MẮN 🎊</h1>
+    <p>Nhập STT & Nickname để mở lì xì</p>
+  </div>
 
-    <header class="header">
-      <h1>BÓC LÌ XÌ 12A3</h1>
-      <p class="subtitle">Mỗi STT chỉ được bóc 1 lần</p>
-    </header>
+  <!-- FORM -->
+  <div class="card form-card">
+    <h2>Thông tin người chơi</h2>
+    <input id="sttInput" type="number" placeholder="STT" />
+    <input id="nameInput" type="text" placeholder="Nickname" />
+    <button id="submitBtn">Xác nhận</button>
+  </div>
 
-    <!-- FORM -->
-    <section class="card">
-      <form id="userForm">
-        <div class="field">
-          <label>STT</label>
-          <input id="stt" type="number" min="1" max="42" placeholder="1 - 42" required />
-        </div>
+  <!-- LÌ XÌ -->
+  <div class="card lixi-card locked" id="lixiCard">
+    <h2>🎁 Chọn 1 bao lì xì</h2>
 
-        <div class="field">
-          <label>Nickname</label>
-          <input id="nickname" type="text" maxlength="20" placeholder="Tên bạn" required />
-        </div>
+    <div class="lixi-grid" id="lixiGrid">
+      <!-- script render -->
+    </div>
 
-        <button type="submit" id="submitBtn">Xác nhận</button>
-      </form>
-    </section>
+    <div class="lock-overlay" id="lockOverlay">
+      Vui lòng nhập STT và Nickname<br />để mở lì xì
+    </div>
+  </div>
 
-    <!-- LÌ XÌ -->
-    <section class="card">
-      <div id="lixiBox" class="lixi-grid locked"></div>
-    </section>
+  <!-- LEADERBOARD -->
+  <div class="card leaderboard">
+    <h2>🏆 Bảng Top</h2>
+    <div id="leaderboardList">
+      <!-- realtime -->
+    </div>
+  </div>
 
-  </main>
+  <!-- MODAL -->
+  <div class="modal hidden" id="resultModal">
+    <div class="modal-box">
+      <h3 id="resultTitle">🎉 Chúc mừng 🎉</h3>
+      <p id="resultText"></p>
+      <button id="closeModal">Đóng</button>
+    </div>
+  </div>
 
-  <audio id="openSound" src="sounds/tntnay4.mp3" preload="auto"></audio>
+  <audio id="tntSound" src="sounds/tntsound.mp3"></audio>
 
   <script src="script.js"></script>
 </body>
